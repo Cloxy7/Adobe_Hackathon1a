@@ -1,0 +1,7 @@
+venv
+classifier_model.pkl
+*.pkl
+__pycache__/
+*.pyc   
+output/
+input/
