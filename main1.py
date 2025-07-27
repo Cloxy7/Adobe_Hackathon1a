@@ -1,14 +1,16 @@
-
 import pandas as pd
 import json
 from sentence_transformers import SentenceTransformer
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split 
 import xgboost as xgb
 from extrationAndLabel import extract_blocks_with_features
-from sklearn.metrics import classification_report
+from sklearn.metrics import classification_report 
 import warnings
-import torch
+import torch 
 import os
+
+# Removed unnecessary imports, keeping only what's used
+# from huggingface_hub import HfFolder 
 
 warnings.filterwarnings('ignore')
 
@@ -21,9 +23,38 @@ print("\n✅ Model loaded successfully.")
 
 pdf_path = r"L:\Adobehack_1A\Input\sample.pdf"
 
+# --- MODIFIED PART: Accessing SentenceTransformer model from cache (with local_files_only=True) ---
+# Determine the Hugging Face cache directory programmatically
+try:
+    # This approach is less reliant on huggingface_hub imports and should be robust
+    huggingface_root_cache_dir = os.environ.get("HF_HOME", os.path.join(os.path.expanduser("~"), ".cache", "huggingface"))
+    huggingface_models_cache_path = os.path.join(huggingface_root_cache_dir, "hub")
+    
+    # Fallback if 'hub' subdirectory isn't found or root cache dir itself is the target
+    if not os.path.exists(huggingface_models_cache_path) and os.path.exists(huggingface_root_cache_dir):
+        huggingface_models_cache_path = huggingface_root_cache_dir
+    elif not os.path.exists(huggingface_models_cache_path) and not os.path.exists(huggingface_root_cache_dir):
+        # Last resort default path if none exists
+        if os.name == 'nt': # Windows
+            huggingface_models_cache_path = os.path.join(os.path.expanduser("~"), ".cache", "huggingface", "hub")
+        else: # Linux/macOS
+            huggingface_models_cache_path = os.path.join(os.path.expanduser("~"), ".cache", "huggingface", "hub")
 
-embedding_model = SentenceTransformer(r"L:\Adobehack_1A\all-MiniLM-L6-v2")
+except Exception as e:
+    print(f"Warning: An error occurred while trying to determine cache path ({e}). Defaulting to common cache paths.")
+    if os.name == 'nt': # Windows
+        huggingface_models_cache_path = os.path.join(os.path.expanduser("~"), ".cache", "huggingface", "hub")
+    else: # Linux/macOS
+        huggingface_models_cache_path = os.path.join(os.path.expanduser("~"), ".cache", "huggingface", "hub")
 
+# Initialize SentenceTransformer model with cache_folder and crucial local_files_only=True
+embedding_model = SentenceTransformer(
+    'sentence-transformers/all-MiniLM-L6-v2', 
+    cache_folder=huggingface_models_cache_path,
+    # This is the key argument to force offline loading
+    local_files_only=True 
+)
+# --- END OF MODIFIED PART ---
 
 print(f"Processing PDF: {pdf_path}...")
 
@@ -53,7 +84,6 @@ X_predict_2 = pd.concat([X_original_1, embeddings_df_new2], axis=1)
 model_features = loaded_model.get_booster().feature_names
 
 X_predict = X_predict_2[model_features]
-
 
 def enforce_document_hierarchy(lines_data):
     """
@@ -99,6 +129,11 @@ def enforce_document_hierarchy(lines_data):
         lines_data[i]['predicted_label'] = current_label
 
     return lines_data
+
+
+# The function enforce_document_hierarchy is defined twice in your original snippet.
+# Keeping only one definition for the final code.
+# The second definition below is removed.
 
 print("Predicting heading levels...")
 predictions = loaded_model.predict(X_predict)
