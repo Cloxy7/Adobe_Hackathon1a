@@ -1,14 +1,13 @@
-
 import pandas as pd
 import json
 from sentence_transformers import SentenceTransformer
-from sklearn.model_selection import train_test_split
 import xgboost as xgb
-from extrationAndLabel import extract_blocks_with_features
-from sklearn.metrics import classification_report
 import warnings
 import torch
 import os
+
+from extrationAndLabel import extract_blocks_with_features
+# Removed unused imports: sklearn.model_selection, sklearn.metrics, huggingface_hub
 
 warnings.filterwarnings('ignore')
 
@@ -21,9 +20,19 @@ print("\n✅ Model loaded successfully.")
 
 pdf_path = r"L:\Adobehack_1A\Input\sample.pdf"
 
+# --- MODIFIED PART: Loading SentenceTransformer model from local project directory ---
+# Define the path where you saved the SentenceTransformer model
+local_sbert_model_path = os.path.join(os.getcwd(), 'sbert_model') # Points to .\sbert_model
 
-embedding_model = SentenceTransformer(r"L:\Adobehack_1A\all-MiniLM-L6-v2")
+if not os.path.exists(local_sbert_model_path):
+    print(f"Error: Local SentenceTransformer model not found at '{local_sbert_model_path}'.")
+    print("Please run 'save_sbert_model.py' first to download and prepare the model.")
+    exit()
 
+# Load the SentenceTransformer model directly from the local folder
+embedding_model = SentenceTransformer(local_sbert_model_path)
+print("✅ Embedding model loaded successfully from local directory.")
+# --- END OF MODIFIED PART ---
 
 print(f"Processing PDF: {pdf_path}...")
 
@@ -53,7 +62,6 @@ X_predict_2 = pd.concat([X_original_1, embeddings_df_new2], axis=1)
 model_features = loaded_model.get_booster().feature_names
 
 X_predict = X_predict_2[model_features]
-
 
 def enforce_document_hierarchy(lines_data):
     """
