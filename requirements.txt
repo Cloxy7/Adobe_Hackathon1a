@@ -1,0 +1,5 @@
+pymupdf
+pandas
+sentence-transformers
+scikit-learn
+xgboost
