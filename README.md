@@ -6,6 +6,8 @@ This project delivers a machine learning-powered solution designed to automatica
 
 ## Our Approach: An Intelligent Document Processing Pipeline
 
+![System Flowchart](flowchart.jpeg)
+
 Our solution processes PDFs through a precise, multi-stage pipeline for accurate structural understanding:
 
 1.  ### Phase 1: Decoding Visual & Layout Cues (Feature Extraction)
