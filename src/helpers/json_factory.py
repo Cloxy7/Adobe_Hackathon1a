@@ -3,10 +3,6 @@ import os
 
 
 class JSONFactory:
-    """
-    This class is responsible for creating structured JSON outlines from OCR results.
-    It processes the OCR output, organizes it into a hierarchical structure, and saves it as a JSON file.
-    """
 
     def __init__(self, pdf_path, corrected_lines,output_dir):
         self.pdf_path = pdf_path
