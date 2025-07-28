@@ -4,7 +4,7 @@
 
 This project delivers a machine learning-powered solution designed to automatically extract and classify structural elements (like titles and headings) from PDF documents. It transforms unstructured PDF content into machine-readable JSON formats, enabling easier data utilization and analysis.
 
-## Our Bespoke Training Data: The Foundation of Intelligence
+## Our Training Data: The Foundation of our Model
 
 The foundation of our model's accuracy is a meticulously curated and **custom-created dataset**. Recognizing the critical role of high-quality, relevant data, we developed this collection **entirely from scratch**. This bespoke dataset of diverse PDF documents, each precisely annotated with structural labels, directly addresses real-world complexities and has been instrumental in training our model for exceptional performance.
 
