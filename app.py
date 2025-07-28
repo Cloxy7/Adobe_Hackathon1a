@@ -11,6 +11,5 @@ if __name__ == "__main__":
     OUTPUT_DIRECTORY = "output"
     process_input_directory(INPUT_DIRECTORY, OUTPUT_DIRECTORY)
     print("\nOperation completed successfully. Check the 'output' directory for results.")
-    time.sleep(10000000)
 end = time.time()
 print(f"Execution time: {end - start:.4f} seconds")
